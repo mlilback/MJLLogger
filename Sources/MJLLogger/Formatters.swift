@@ -21,6 +21,7 @@ public enum LogFormatToken: String {
 }
 
 public class TokenizedLogFormatter: LogFormatter {
+	public static let defaultLogFormat = "(%date) (%level) (%category), (%function)[(%file):(%line)] (%message)"
 	public enum FormatterError: Error {
 		case invalidFormat
 	}
@@ -35,7 +36,7 @@ public class TokenizedLogFormatter: LogFormatter {
 	let dateFormatter: DateFormatterProtocol
 	
 	public init(formatString: String? = nil, dateFormatter: DateFormatterProtocol? = nil) {
-		self.fmtString = formatString ?? "[(%date)] [(%level)] [(%category)], [(%file):(%line):(%function)] (%message)"
+		self.fmtString = formatString ?? TokenizedLogFormatter.defaultLogFormat
 		self.dateFormatter = dateFormatter ?? ISO8601DateFormatter()
 		do {
 		let regex = try NSRegularExpression(pattern: "\\(%\\w+\\)", options: .useUnicodeWordBoundaries)
