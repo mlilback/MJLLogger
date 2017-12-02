@@ -14,7 +14,7 @@ import Foundation
 /// - debug: a message only relevant while debugging
 /// - enter: a notice of enter a function
 /// - exit: a notice of exiting a function
-public enum LogLevel: Int, CustomStringConvertible {
+public enum LogLevel: Int, Comparable, CustomStringConvertible {
 	case error = 1
 	case warn
 	case info
@@ -24,13 +24,15 @@ public enum LogLevel: Int, CustomStringConvertible {
 	
 	public var description: String {
 		switch self {
-			case .error: return "ERROR"
-			case .warn: return "WARN"
-			case .info: return "INFO"
-			case .debug: return "DEBUG"
-			case .enter: return "ENTER"
-			case .exit: return "EXIT"
+			case .error: return "❤️ ERROR"
+			case .warn: return "💛 WARN"
+			case .info: return "💜 INFO"
+			case .debug: return "🖤 DEBUG"
+			case .enter: return "💙 ENTER"
+			case .exit: return "💙 EXIT"
 		}
 	}
-	
+	public static func <(lhs: LogLevel, rhs: LogLevel) -> Bool {
+		return lhs.rawValue < rhs.rawValue
+	}
 }
