@@ -34,9 +34,11 @@ public final class TextStreamLogger: Logger {
 	}
 	
 	public override func log(_ entry: LogEntry) {
-		guard let str = formatter.format(entry: entry) else { return }
-		stream.write(str)
-		stream.write("\n")
+		guard let str = formatter.format(entry: entry), 
+			let estr = Optional(str + "\n"),
+			let data = estr.data(using: .utf8)
+		else { return }
+		stream.write(data)
 	}
 }
 
