@@ -24,12 +24,12 @@ public enum LogLevel: Int, Comparable, CustomStringConvertible {
 	
 	public var description: String {
 		switch self {
-			case .error: return "❤️ ERROR"
-			case .warn: return "💛 WARN"
-			case .info: return "💜 INFO"
-			case .debug: return "🖤 DEBUG"
-			case .enter: return "💙 ENTER"
-			case .exit: return "💙 EXIT"
+			case .error: return "🛑 ERROR"
+			case .warn: return "⚠️ WARN"
+			case .info: return "ℹ️ INFO"
+			case .debug: return "🐞 DEBUG"
+			case .enter: return "→ ENTER"
+			case .exit: return "← EXIT"
 		}
 	}
 	public static func <(lhs: LogLevel, rhs: LogLevel) -> Bool {

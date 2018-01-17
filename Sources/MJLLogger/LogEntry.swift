@@ -11,13 +11,18 @@ public struct LogEntry {
 	let message: String
 	private(set) var level: LogLevel
 	let category: LogCategory
-	let function: String
-	let line: Int
-	let fileName: String
+	let function: String?
+	let line: Int?
+	let fileName: String?
 	let date = Date()
 	
-//	mutating internal func changeLevel(_ newLevel: LogLevel) {
-//		self.level = newLevel
-//	}
+	public init(message: String, level: LogLevel = .info, category: LogCategory = .general, function: String? = nil, line: Int? = nil, fileName: String? = nil)
+	{
+		self.message = message
+		self.level = level
+		self.category = category
+		self.function = function
+		self.line = line
+		self.fileName = fileName
+	}
 }
-
