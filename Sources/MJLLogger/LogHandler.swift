@@ -12,12 +12,16 @@ public protocol LogHandler {
 	var formatter: LogFormatter { get }
 	/// append the log entry to the appropriate destination
 	func append(entry: LogEntry)
+	/// offers equality comparison without making generic
+	func equals(_ rhs: LogHandler) -> Bool
 }
 
 /// LogHandler that appends log entries to a mutable attributed string (such as a NSTextStorage instance)
 public final class AttributedStringLogHandler: LogHandler {
+
 	public internal(set) var formatter: LogFormatter
 	public var outputString: NSMutableAttributedString
+	public var hashValue: Int { return ObjectIdentifier(self).hashValue }
 	
 	public init(formatter: LogFormatter, output: NSMutableAttributedString) {
 		self.formatter = formatter
@@ -28,6 +32,11 @@ public final class AttributedStringLogHandler: LogHandler {
 		guard let attrstr = formatter.formatWithAttributes(entry: entry) else { return }
 		outputString.append(attrstr)
 		outputString.append(NSAttributedString(string: "\n"))
+	}
+
+	public func equals(_ rhs: LogHandler) -> Bool {
+		guard let other = rhs as? AttributedStringLogHandler else { return false }
+		return self.hashValue == other.hashValue
 	}
 }
 
@@ -48,6 +57,7 @@ open class FileHandleLogHandler: LogHandler {
 	private let queue = DispatchQueue(label: "com.lilback.MJLLogger.fileHandleLogHandler", qos: .userInitiated)
 	public let formatter: LogFormatter
 	public let config: LogConfiguration
+	public var hashValue: Int { return ObjectIdentifier(self).hashValue }
 
 	public init(config: LogConfiguration, fileHandle: FileHandle, formatter: LogFormatter?)
 	{
@@ -70,5 +80,10 @@ open class FileHandleLogHandler: LogHandler {
 				self?.handle?.write(data)
 			}
 		}
+	}
+
+	public func equals(_ rhs: LogHandler) -> Bool {
+		guard let other = rhs as? FileHandleLogHandler else { return false }
+		return self.hashValue == other.hashValue
 	}
 }
