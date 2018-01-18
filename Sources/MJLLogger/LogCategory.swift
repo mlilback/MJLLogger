@@ -7,7 +7,7 @@
 import Foundation
 
 /// A structure used to categorize a log entry. Users should extend the structure by adding static instances like the general one that is already declared.
-public struct LogCategory: RawRepresentable, Hashable {
+public struct LogCategory: RawRepresentable, Hashable, Codable {
 	
 	/// The default category used by default
 	public static let general: LogCategory = LogCategory("general")

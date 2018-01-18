@@ -14,7 +14,7 @@ import Foundation
 /// - debug: a message only relevant while debugging
 /// - enter: a notice of enter a function
 /// - exit: a notice of exiting a function
-public enum LogLevel: Int, Comparable, CustomStringConvertible {
+public enum LogLevel: Int, Comparable, CustomStringConvertible, Codable {
 	case error = 1
 	case warn
 	case info

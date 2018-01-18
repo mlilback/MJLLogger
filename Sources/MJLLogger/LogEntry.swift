@@ -7,15 +7,16 @@
 import Foundation
 
 /// The data associated with an entry in the log
-public struct LogEntry {
+public struct LogEntry: Codable {
 	/// content type of a LogEntry
 	///
 	/// - entry: a normal log entry
 	/// - start: designates the application being launched (or at least, logging enabled)
-	public enum EntryType: String {
+	public enum EntryType: String, Codable {
 		case entry
 		case start
 	}
+	
 	/// the type of entry. defaults to `.entry`
 	let type: EntryType
 	/// the log message. defaults to empty string
