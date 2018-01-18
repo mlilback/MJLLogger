@@ -15,13 +15,6 @@ public protocol LogFormatter {
 	func formatWithAttributes(entry: LogEntry) -> NSAttributedString?
 }
 
-extension LogFormatter {
-	func formatWithAttributes(entry: LogEntry) -> NSAttributedString? {
-		guard let rawStr = format(entry: entry) else { return nil }
-		return NSAttributedString(string: rawStr)
-	}
-}
-
 /// Tokens that can be parsed from a format string
 ///
 /// - date: "(%date)" is replaced with the date/time of the log entry
@@ -32,6 +25,7 @@ extension LogFormatter {
 /// - filename: "(%filename)" is replaced with the last path component (i.e. the name) of the source file
 /// - line: "(%line)" is replaced with the line number of the log call
 /// - function: "(%function)" is replaced with the name of the function that made the log entry
+/// - type: "(%type%)" is replaced with the entry type (entry or start). Formatters are free to write any value they want, but should document what is used
 public enum LogFormatToken: String {
 	case date = "(%date)"
 	case level = "(%level)"
@@ -41,12 +35,13 @@ public enum LogFormatToken: String {
 	case shortFile = "(%filename)"
 	case line = "(%line)"
 	case function = "(%function)"
+	case type = "(%type)"
 }
 
 /// a flexible LogFormatter using parsed tokens
 public class TokenizedLogFormatter: LogFormatter {
 	/// the default format string
-	public static let defaultLogFormat = "(%date) (%level) (%category), (%function)[(%file):(%line)] (%message)"
+	public static let defaultLogFormat = "(%type) (%date) (%level) (%category), (%function)[(%file):(%line)] (%message)"
 	/// errors thrown by the tokenized log formatter
 	public enum FormatterError: Error {
 		case invalidFormat
@@ -172,6 +167,8 @@ public class TokenizedLogFormatter: LogFormatter {
 	
 	func value(for token: LogFormatToken, of entry: LogEntry) -> String? {
 		switch token {
+		case .type:
+			return entry.type.rawValue
 		case .category:
 			return entry.category.rawValue
 		case .level:
@@ -197,6 +194,8 @@ public class TokenizedLogFormatter: LogFormatter {
 
 	func attributedValue(for token: LogFormatToken, of entry: LogEntry) -> NSAttributedString? {
 		switch token {
+		case .type:
+			return NSAttributedString(string: entry.type.rawValue)
 		case .category:
 			return NSAttributedString(string: entry.category.rawValue)
 		case .level:
