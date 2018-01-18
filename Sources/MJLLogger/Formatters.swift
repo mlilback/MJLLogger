@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import os
 
 public protocol LogFormatter {
 	/// the configuration to use
@@ -14,6 +15,8 @@ public protocol LogFormatter {
 	/// formats the entry as an attributed string. by default, just returns plain text string as an attributed string
 	func formatWithAttributes(entry: LogEntry) -> NSAttributedString?
 }
+
+// MARK: -
 
 /// Tokens that can be parsed from a format string
 ///
@@ -221,6 +224,40 @@ public class TokenizedLogFormatter: LogFormatter {
 			return NSAttributedString(string: functionName)
 		}
 	}
+}
+
+// MARK: - JSON Formtter
+
+/// formats an entry into json format. dates are in ISO8601 format
+public class JSONLogFormatter: LogFormatter {
+	public var config: LogConfiguration
+	public let encoder: JSONEncoder
+	
+	/// creates a formatter that formats entries as json
+	public init(config: LogConfiguration) {
+		self.config = config
+		self.encoder = JSONEncoder()
+		encoder.dateEncodingStrategy = .iso8601
+	}
+	
+	public func format(entry: LogEntry) -> String? {
+		do {
+			let data = try encoder.encode(entry)
+			guard let string = String(data: data, encoding: .utf8)
+				else { os_log("Failed to encode LogEntry"); return nil }
+			return string
+		} catch {
+			os_log("Failed to encode LogEntry: %{public}@", error.localizedDescription)
+		}
+		return nil
+	}
+	
+	public func formatWithAttributes(entry: LogEntry) -> NSAttributedString? {
+		guard let string = format(entry: entry) else { return nil }
+		return NSAttributedString(string: string)
+	}
+	
+	
 }
 
 // MARK: - Foundation Date
