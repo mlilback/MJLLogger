@@ -18,21 +18,21 @@ public struct LogEntry: Codable {
 	}
 	
 	/// the type of entry. defaults to `.entry`
-	let type: EntryType
+	public let type: EntryType
 	/// the log message. defaults to empty string. replaces newlines with spaces
-	let message: String
+	public let message: String
 	/// the level of the entry. defaults to `.info`
-	private(set) var level: LogLevel
+	public private(set) var level: LogLevel
 	// the category of the entry, defaults to `.general`
-	let category: LogCategory
+	public let category: LogCategory
 	/// the name of the function that created the entry
-	let function: String?
+	public let function: String?
 	/// the line number of the call to create the entry
-	let line: Int?
+	public let line: Int?
 	/// the filename/path to the file with the call to create the entry
-	let fileName: String?
+	public let fileName: String?
 	/// the timestamp of when the entry was created
-	let date = Date()
+	public let date = Date()
 	
 	/// initializes a new LogEntry. All values have default values
 	public init(type: EntryType = .entry, message: String = "", level: LogLevel = .info, category: LogCategory = .general, function: String? = nil, line: Int? = nil, fileName: String? = nil)
