@@ -19,7 +19,7 @@ public struct LogEntry: Codable {
 	
 	/// the type of entry. defaults to `.entry`
 	let type: EntryType
-	/// the log message. defaults to empty string
+	/// the log message. defaults to empty string. replaces newlines with spaces
 	let message: String
 	/// the level of the entry. defaults to `.info`
 	private(set) var level: LogLevel
@@ -38,7 +38,7 @@ public struct LogEntry: Codable {
 	public init(type: EntryType = .entry, message: String = "", level: LogLevel = .info, category: LogCategory = .general, function: String? = nil, line: Int? = nil, fileName: String? = nil)
 	{
 		self.type = type
-		self.message = message
+		self.message = message.replacingOccurrences(of: "\n", with: " ")
 		self.level = level
 		self.category = category
 		self.function = function
