@@ -14,18 +14,26 @@ public protocol LogHandler {
 	func append(entry: LogEntry)
 	/// offers equality comparison without making generic
 	func equals(_ rhs: LogHandler) -> Bool
+	/// some handlers might want to log every message. This enables that.
+	var logEverything: Bool { get }
+}
+
+extension LogHandler {
+	public var logEverything: Bool { return false }
 }
 
 /// LogHandler that appends log entries to a mutable attributed string (such as a NSTextStorage instance)
 public final class AttributedStringLogHandler: LogHandler {
 
 	public internal(set) var formatter: LogFormatter
+	public let logEverything: Bool
 	public var outputString: NSMutableAttributedString
 	public var hashValue: Int { return ObjectIdentifier(self).hashValue }
 	
-	public init(formatter: LogFormatter, output: NSMutableAttributedString) {
+	public init(formatter: LogFormatter, output: NSMutableAttributedString, logEverything: Bool = false) {
 		self.formatter = formatter
 		self.outputString = output
+		self.logEverything = logEverything
 	}
 	
 	public func append(entry: LogEntry) {
@@ -46,7 +54,7 @@ public final class StdErrHandler: FileHandleLogHandler {
 		super.init(config: config, fileHandle: FileHandle.standardError, formatter: formatter)
 	}
 
-	public override init(config: LogConfiguration, fileHandle: FileHandle, formatter: LogFormatter?) {
+	public override init(config: LogConfiguration, fileHandle: FileHandle, formatter: LogFormatter?, logEverything: Bool) {
 		fatalError("init with fileHandle not possible with StdErrHandler")
 	}
 }
@@ -57,13 +65,15 @@ open class FileHandleLogHandler: LogHandler {
 	private let queue = DispatchQueue(label: "com.lilback.MJLLogger.fileHandleLogHandler", qos: .userInitiated)
 	public let formatter: LogFormatter
 	public let config: LogConfiguration
+	public let logEverything: Bool
 	public var hashValue: Int { return ObjectIdentifier(self).hashValue }
 
-	public init(config: LogConfiguration, fileHandle: FileHandle, formatter: LogFormatter?)
+	public init(config: LogConfiguration, fileHandle: FileHandle, formatter: LogFormatter?, logEverything: Bool = false)
 	{
 		self.config = config
 		self.handle = fileHandle
 		self.formatter = formatter ?? TokenizedLogFormatter(config: config)
+		self.logEverything = logEverything
 	}
 	
 	deinit {

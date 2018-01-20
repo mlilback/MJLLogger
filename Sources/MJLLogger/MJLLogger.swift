@@ -21,7 +21,7 @@ public final class Log {
 	}
 
 	public static func isLogging(_ level: LogLevel, category: LogCategory = .general) -> Bool {
-		return logger?.configuration.loggingEnabled(level: level, category: category) ?? false
+		return (logger?.logEverything ?? false) || (logger?.configuration.loggingEnabled(level: level, category: category) ?? false)
 	}
 	
 	public static func error(_ message: String, _ category: LogCategory = .general, function: String = #function, lineNumber: Int = #line, fileName: String = #file)

@@ -26,7 +26,7 @@ public protocol LogConfiguration: class {
 }
 
 extension LogConfiguration {
-	func description(logLevel: LogLevel) -> NSAttributedString {
+	public func description(logLevel: LogLevel) -> NSAttributedString {
 		return NSAttributedString(string: logLevel.description)
 	}
 }
