@@ -62,7 +62,8 @@ public final class StdErrHandler: FileHandleLogHandler {
 /// appends log entries to a file handle on a background, serial queue
 open class FileHandleLogHandler: LogHandler {
 	private var handle: FileHandle?
-	private let queue = DispatchQueue(label: "com.lilback.MJLLogger.fileHandleLogHandler", qos: .userInitiated)
+	// had a deadlock on the main thread. makes no sense since there was no recursive call to append, which is the only place this queue is used
+	private let queue = DispatchQueue(label: "com.lilback.MJLLogger.fileHandleLogHandler", qos: .userInitiated, target: .global())
 	public let formatter: LogFormatter
 	public let config: LogConfiguration
 	public let logEverything: Bool
