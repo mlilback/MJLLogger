@@ -5,7 +5,23 @@
 //
 
 import Foundation
+#if os(OSX)
 import os
+#endif
+import Dispatch
+
+#if os(Linux)
+import Glibc
+public typealias NSAttributedStringKey = String
+#endif
+
+fileprivate func log_error(_ message: String) {
+	#if os(Linux)
+		FileHandle.standardError.write(message.data(using: .utf8)!)
+	#else 
+		os_log("%{public}@", message)
+	#endif
+}
 
 public protocol LogFormatter {
 	/// the configuration to use
@@ -147,13 +163,16 @@ public class TokenizedLogFormatter: LogFormatter {
 	
 	/// format entry as an NSAttributedString
 	public func formatWithAttributes(entry: LogEntry) -> NSAttributedString? {
-		let str = NSMutableAttributedString()
+		let str = NSMutableAttributedString(string: "")
 		var lastAttrs = [NSAttributedStringKey: Any]()
 		for aToken in tokens {
 			switch aToken {
 			case .text(let text):
 				str.append(text)
-				lastAttrs = str.attributes(at: str.length - 1, effectiveRange: nil)
+				// FIXME: once linux is using swift 4.1
+				// the call to str.attributes accepts NSRangePointer? in swift 4 on OSX, but not on linux until 4.1. so use a dummpy range pointer
+				var unusedRange: NSRange = NSRange(location: 0, length: text.length)
+				lastAttrs = str.attributes(at: str.length - 1, effectiveRange: &unusedRange)
 			case .token(let formatToken):
 				guard let valueStr = attributedValue(for: formatToken, of: entry) else { break }
 				str.append(valueStr)
@@ -244,10 +263,10 @@ public class JSONLogFormatter: LogFormatter {
 		do {
 			let data = try encoder.encode(entry)
 			guard let string = String(data: data, encoding: .utf8)
-				else { os_log("Failed to encode LogEntry"); return nil }
+				else { log_error("Failed to encode LogEntry"); return nil }
 			return string
 		} catch {
-			os_log("Failed to encode LogEntry: %{public}@", error.localizedDescription)
+			log_error("Failed to encode LogEntry: \(error.localizedDescription)")
 		}
 		return nil
 	}

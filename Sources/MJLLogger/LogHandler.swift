@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import Dispatch
 
 /// Base protocol for a destination of LogEntries
 public protocol LogHandler {
