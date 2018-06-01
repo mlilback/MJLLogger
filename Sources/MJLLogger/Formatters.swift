@@ -10,11 +10,6 @@ import os
 #endif
 import Dispatch
 
-#if os(Linux)
-import Glibc
-public typealias NSAttributedStringKey = String
-#endif
-
 fileprivate func log_error(_ message: String) {
 	#if os(Linux)
 		FileHandle.standardError.write(message.data(using: .utf8)!)
