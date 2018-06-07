@@ -132,7 +132,8 @@ public class TokenizedLogFormatter: LogFormatter {
 	{
 		self.config = config
 		self.formatString = formatString ?? NSAttributedString(string: TokenizedLogFormatter.defaultLogFormat)
-		self.dateFormatter = dateFormatter ?? ISO8601DateFormatter()
+	self.dateFormatter = dateFormatter ?? DateFormatter()
+//	self.dateFormatter = dateFormatter ?? ISO8601DateFormatter()
 		do {
 			self.tokens = try TokenizedLogFormatter.parseTokens(formatString: self.formatString, dateFormatter: self.dateFormatter)
 		} catch {
