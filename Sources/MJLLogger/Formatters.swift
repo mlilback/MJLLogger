@@ -106,7 +106,7 @@ public class TokenizedLogFormatter: LogFormatter {
 	/// The format string that should contain LogFormatTokens
 	public let formatString: NSAttributedString
 	/// the attributes to use when formatting a particular token type as an attributed string
-	public let tokenAttributes = [LogFormatToken: [NSAttributedStringKey: Any]]()
+	public let tokenAttributes = [LogFormatToken: [NSAttributedString.Key: Any]]()
 
 	let tokens: [Token]
 	let dateFormatter: DateFormatterProtocol
@@ -160,7 +160,7 @@ public class TokenizedLogFormatter: LogFormatter {
 	/// format entry as an NSAttributedString
 	public func formatWithAttributes(entry: LogEntry) -> NSAttributedString? {
 		let str = NSMutableAttributedString(string: "")
-		var lastAttrs = [NSAttributedStringKey: Any]()
+		var lastAttrs = [NSAttributedString.Key: Any]()
 		for aToken in tokens {
 			switch aToken {
 			case .text(let text):

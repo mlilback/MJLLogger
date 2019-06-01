@@ -28,7 +28,7 @@ public final class Logger {
 	}
 	
 	public func remove(handler: LogHandler) {
-		guard let idx = handlers.index(where: { handler.equals($0) }) else { return }
+		guard let idx = handlers.firstIndex(where: { handler.equals($0) }) else { return }
 		handlers.remove(at: idx)
 		logEverything = false
 		handlers.forEach { if $0.logEverything { self.logEverything = true } }
