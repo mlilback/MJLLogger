@@ -38,7 +38,7 @@ public final class AttributedStringLogHandler: LogHandler {
 	}
 	
 	public func append(entry: LogEntry) {
-		guard let attrstr = formatter.formatWithAttributes(entry: entry) else { return }
+		guard let attrstr = formatter.formatWithAttributes(entry: entry), attrstr.length > 0 else { return }
 		outputString.append(attrstr)
 		outputString.append(NSAttributedString(string: "\n"))
 	}
