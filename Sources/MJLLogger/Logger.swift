@@ -7,9 +7,9 @@
 import Foundation
 
 /// The base class for a logger
-public final class Logger {
+public final class MJLLogger {
 	let configuration: LogConfiguration
-	internal var handlers = [LogHandler]()
+	internal var handlers = [MJLLogHandler]()
 	private var started: Bool = false
 	/// set to true if any LogHandler wants to log everything
 	internal private(set) var logEverything: Bool = false
@@ -19,7 +19,7 @@ public final class Logger {
 		self.configuration = config
 	}
 	
-	public func append(handler: LogHandler) {
+	public func append(handler: MJLLogHandler) {
 		handlers.append(handler)
 		if started {
 			handler.append(entry: LogEntry(type: .start))
@@ -27,7 +27,7 @@ public final class Logger {
 		logEverything = logEverything && handler.logEverything
 	}
 	
-	public func remove(handler: LogHandler) {
+	public func remove(handler: MJLLogHandler) {
 		guard let idx = handlers.firstIndex(where: { handler.equals($0) }) else { return }
 		handlers.remove(at: idx)
 		logEverything = false

@@ -9,18 +9,18 @@ import Foundation
 /// A class containing singleton access to the logging system
 public final class Log {
 	/// The singleton Logger instance. Can only be set once via enableLogging()
-	public private(set) static var logger: Logger?
+	public private(set) static var logger: MJLLogger?
 	/// A flag to track if the logger has been set
 	private static var loggerSet: Bool = false
 	
 	/// Setup the Logger to use.
-	public static func enableLogging(_ logger: Logger?) {
+	public static func enableLogging(_ logger: MJLLogger?) {
 		guard !loggerSet else { return }
 		loggerSet = true
 		self.logger = logger
 	}
 
-	public static func isLogging(_ level: LogLevel, category: LogCategory = .general) -> Bool {
+	public static func isLogging(_ level: MJLLogLevel, category: LogCategory = .general) -> Bool {
 		return (logger?.logEverything ?? false) || (logger?.configuration.loggingEnabled(level: level, category: category) ?? false)
 	}
 	

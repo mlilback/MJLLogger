@@ -22,7 +22,7 @@ public struct LogEntry: Codable {
 	/// the log message. defaults to empty string. replaces newlines with spaces
 	public let message: String
 	/// the level of the entry. defaults to `.info`
-	public private(set) var level: LogLevel
+	public private(set) var level: MJLLogLevel
 	// the category of the entry, defaults to `.general`
 	public let category: LogCategory
 	/// the name of the function that created the entry
@@ -35,7 +35,7 @@ public struct LogEntry: Codable {
 	public let date = Date()
 	
 	/// initializes a new LogEntry. All values have default values
-	public init(type: EntryType = .entry, message: String = "", level: LogLevel = .info, category: LogCategory = .general, function: String? = nil, line: Int? = nil, fileName: String? = nil)
+	public init(type: EntryType = .entry, message: String = "", level: MJLLogLevel = .info, category: LogCategory = .general, function: String? = nil, line: Int? = nil, fileName: String? = nil)
 	{
 		self.type = type
 		self.message = message.replacingOccurrences(of: "\n", with: " ")

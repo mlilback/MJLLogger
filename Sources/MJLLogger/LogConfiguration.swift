@@ -16,17 +16,17 @@ public protocol LogConfiguration: class {
 	///   - level: the LogLevel in question
 	///   - category: the category in question
 	/// - Returns: true if an entry should be logged for the combination of level and category
-	func loggingEnabled(level: LogLevel, category: LogCategory) -> Bool
+	func loggingEnabled(level: MJLLogLevel, category: LogCategory) -> Bool
 
 	/// Returns the custom description of logLevel, or the default description if a custom one was not specified
 	///
 	/// - Parameter logLevel: the logLevel
 	/// - Returns: a description for the logLevel
-	func description(logLevel: LogLevel) -> NSAttributedString
+	func description(logLevel: MJLLogLevel) -> NSAttributedString
 }
 
 extension LogConfiguration {
-	public func description(logLevel: LogLevel) -> NSAttributedString {
+	public func description(logLevel: MJLLogLevel) -> NSAttributedString {
 		return NSAttributedString(string: logLevel.description)
 	}
 }
@@ -34,24 +34,24 @@ extension LogConfiguration {
 /// a basic log configuration that has a static global log level and optional dictionary of LogLevel descriptions
 public final class DefaultLogConfiguration: LogConfiguration {
 	/// the static global log level
-	public let globalLevel: LogLevel
-	private let levelDescriptions: [LogLevel: NSAttributedString]?
+	public let globalLevel: MJLLogLevel
+	private let levelDescriptions: [MJLLogLevel: NSAttributedString]?
 	
 	/// Creates a default configuration object
 	///
 	/// - Parameters:
 	///   - level: the default log level
 	///   - levelDescriptions: a dictionary of log levels to custom, attributed descriptions of those levels
-	public init(level: LogLevel = .warn, levelDescriptions: [LogLevel: NSAttributedString]? = nil) {
+	public init(level: MJLLogLevel = .warn, levelDescriptions: [MJLLogLevel: NSAttributedString]? = nil) {
 		self.globalLevel = level
 		self.levelDescriptions = levelDescriptions
 	}
 	
-	public func loggingEnabled(level: LogLevel, category: LogCategory) -> Bool {
+	public func loggingEnabled(level: MJLLogLevel, category: LogCategory) -> Bool {
 		return level.rawValue <= globalLevel.rawValue
 	}
 	
-	public func description(logLevel: LogLevel) -> NSAttributedString {
+	public func description(logLevel: MJLLogLevel) -> NSAttributedString {
 		if let customDesc = levelDescriptions?[logLevel] { return customDesc }
 		return NSAttributedString(string: logLevel.description)
 	}

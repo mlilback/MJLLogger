@@ -8,23 +8,23 @@ import Foundation
 import Dispatch
 
 /// Base protocol for a destination of LogEntries
-public protocol LogHandler {
+public protocol MJLLogHandler {
 	/// used to format log entries
 	var formatter: LogFormatter { get }
 	/// append the log entry to the appropriate destination
 	func append(entry: LogEntry)
 	/// offers equality comparison without making generic
-	func equals(_ rhs: LogHandler) -> Bool
+	func equals(_ rhs: MJLLogHandler) -> Bool
 	/// some handlers might want to log every message. This enables that.
 	var logEverything: Bool { get }
 }
 
-extension LogHandler {
+extension MJLLogHandler {
 	public var logEverything: Bool { return false }
 }
 
 /// LogHandler that appends log entries to a mutable attributed string (such as a NSTextStorage instance)
-public final class AttributedStringLogHandler: LogHandler {
+public final class AttributedStringLogHandler: MJLLogHandler {
 
 	public internal(set) var formatter: LogFormatter
 	public let logEverything: Bool
@@ -43,7 +43,7 @@ public final class AttributedStringLogHandler: LogHandler {
 		outputString.append(NSAttributedString(string: "\n"))
 	}
 
-	public func equals(_ rhs: LogHandler) -> Bool {
+	public func equals(_ rhs: MJLLogHandler) -> Bool {
 		guard let other = rhs as? AttributedStringLogHandler else { return false }
 		return self.hashValue == other.hashValue
 	}
@@ -61,7 +61,7 @@ public final class StdErrHandler: FileHandleLogHandler {
 }
 
 /// appends log entries to a file handle on a background, serial queue
-open class FileHandleLogHandler: LogHandler {
+open class FileHandleLogHandler: MJLLogHandler {
 	private var handle: FileHandle?
 	// had a deadlock on the main thread. makes no sense since there was no recursive call to append, which is the only place this queue is used
 	private let queue = DispatchQueue(label: "com.lilback.MJLLogger.fileHandleLogHandler", qos: .userInitiated, target: .global())
@@ -94,7 +94,7 @@ open class FileHandleLogHandler: LogHandler {
 		}
 	}
 
-	public func equals(_ rhs: LogHandler) -> Bool {
+	public func equals(_ rhs: MJLLogHandler) -> Bool {
 		guard let other = rhs as? FileHandleLogHandler else { return false }
 		return self.hashValue == other.hashValue
 	}
