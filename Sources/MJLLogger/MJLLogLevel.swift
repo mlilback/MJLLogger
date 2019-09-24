@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import Logging
 
 /// Levels of log messages in decreasing importance
 ///
@@ -27,6 +28,18 @@ public enum MJLLogLevel: Int, Comparable, CustomStringConvertible, Codable, Case
 //	case exit
 	/// for SwiftLog compatibility
 	case trace
+	
+	public init(level: Logger.Level) {
+		switch level {
+		case .trace: self = .trace
+		case .debug: self = .debug
+		case .info: self = .info
+		case .notice: self = .notice
+		case .warning: self = .warn
+		case .error: self = .error
+		case .critical: self = .critical
+		}
+	}
 	
 	public var description: String {
 		switch self {

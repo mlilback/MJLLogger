@@ -49,6 +49,31 @@ public final class AttributedStringLogHandler: MJLLogHandler {
 	}
 }
 
+/// appends log entries to any stream such as stdout or a strean used for print calls
+public final class TextStreamHandler: MJLLogHandler {
+	var config: LogConfiguration
+	var stream: TextOutputStream
+	public var formatter: LogFormatter
+	
+	public init(stream: TextOutputStream, config: LogConfiguration, formatter: LogFormatter? = nil) {
+		self.config = config
+		self.stream = stream
+		self.formatter = formatter ?? TokenizedLogFormatter(config: config)
+	}
+
+	public func append(entry: LogEntry) {
+		guard let str = formatter.format(entry: entry), str.count > 0
+			else { return }
+		stream.write(str + "\n")
+	}
+	
+	public func equals(_ rhs: MJLLogHandler) -> Bool {
+		guard let other = rhs as? TextStreamHandler else { return false }
+		return ObjectIdentifier(self) == ObjectIdentifier(other)
+	}
+}
+
+
 /// appends log entries to STDERR
 public final class StdErrHandler: FileHandleLogHandler {
 	public init(config: LogConfiguration, formatter: LogFormatter?) {

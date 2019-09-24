@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import Logging
 
 /// A class containing singleton access to the logging system
 public final class Log {
@@ -13,11 +14,22 @@ public final class Log {
 	/// A flag to track if the logger has been set
 	private static var loggerSet: Bool = false
 	
-	/// Setup the Logger to use.
+	/// Setup the Logger to use. Repeated calls are ignored
 	public static func enableLogging(_ logger: MJLLogger?) {
 		guard !loggerSet else { return }
 		loggerSet = true
 		self.logger = logger
+	}
+	
+	/// Creates a Logging.LogHandler. Serves as a  factory function for LoggingSystem.bootstrap
+	/// e.g. `LoggingSystem.bootstrap(Log.createSwiftLogger)`
+	///
+	/// - Parameter label: The label for the handler to create
+	///
+	/// - Returns: a Logging.LogHandler
+	public static func createSwiftLogger(label: String) -> LogHandler {
+		guard let log = logger else { fatalError("logging was not enabled") }
+		return SwiftLogHandler(label: label, logger: log)
 	}
 
 	public static func isLogging(_ level: MJLLogLevel, category: LogCategory = .general) -> Bool {
