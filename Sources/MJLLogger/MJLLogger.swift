@@ -35,6 +35,12 @@ public final class Log {
 		logger?.log(LogEntry(message: message, level: .warn, category: category, function: function, line: lineNumber, fileName: fileName))
 	}
 
+	public static func notice(_ message: String, _ category: LogCategory = .general, function: String = #function, lineNumber: Int = #line, fileName: String = #file)
+	{
+		guard isLogging(.notice, category: category) else { return }
+		logger?.log(LogEntry(message: message, level: .notice, category: category, function: function, line: lineNumber, fileName: fileName))
+	}
+
 	public static func info(_ message: String, _ category: LogCategory = .general, function: String = #function, lineNumber: Int = #line, fileName: String = #file)
 	{
 		guard isLogging(.info, category: category) else { return }
@@ -47,16 +53,24 @@ public final class Log {
 		logger?.log(LogEntry(message: message, level: .debug, category: category, function: function, line: lineNumber, fileName: fileName))
 	}
 
-	public static func enter(_ category: LogCategory = .general, function: String = #function, lineNumber: Int = #line, fileName: String = #file)
+	public static func trace(_ message: String, _ category: LogCategory = .general, function: String = #function, lineNumber: Int = #line, fileName: String = #file)
 	{
-		guard isLogging(.enter, category: category) else { return }
-		logger?.log(LogEntry(message: "", level: .enter, category: category, function: function, line: lineNumber, fileName: fileName))
+		guard isLogging(.trace, category: category) else { return }
+		logger?.log(LogEntry(message: message, level: .trace, category: category, function: function, line: lineNumber, fileName: fileName))
 	}
 
+	@available(*, deprecated)
+	public static func enter(_ category: LogCategory = .general, function: String = #function, lineNumber: Int = #line, fileName: String = #file)
+	{
+		guard isLogging(.trace, category: category) else { return }
+		logger?.log(LogEntry(message: "", level: .trace, category: category, function: function, line: lineNumber, fileName: fileName))
+	}
+	
+	@available(*, deprecated)
 	public static func exit(_ category: LogCategory = .general, function: String = #function, lineNumber: Int = #line, fileName: String = #file)
 	{
-		guard isLogging(.exit, category: category) else { return }
-		logger?.log(LogEntry(message: "", level: .exit, category: category, function: function, line: lineNumber, fileName: fileName))
+		guard isLogging(.trace, category: category) else { return }
+		logger?.log(LogEntry(message: "", level: .trace, category: category, function: function, line: lineNumber, fileName: fileName))
 	}
 }
 

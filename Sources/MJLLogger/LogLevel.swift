@@ -14,22 +14,31 @@ import Foundation
 /// - debug: a message only relevant while debugging
 /// - enter: a notice of enter a function
 /// - exit: a notice of exiting a function
-public enum LogLevel: Int, Comparable, CustomStringConvertible, Codable {
-	case error = 1
+public enum LogLevel: Int, Comparable, CustomStringConvertible, Codable, CaseIterable {
+	/// for SwiftLog compatibility
+	case critical = 1
+	case error
 	case warn
+	/// for SwiftLog compatibility
+	case notice
 	case info
 	case debug
-	case enter
-	case exit
+//	case enter
+//	case exit
+	/// for SwiftLog compatibility
+	case trace
 	
 	public var description: String {
 		switch self {
-			case .error: return "🛑 ERROR"
-			case .warn: return "⚠️ WARN"
-			case .info: return "ℹ️ INFO"
-			case .debug: return "🐞 DEBUG"
-			case .enter: return "→ ENTER"
-			case .exit: return "← EXIT"
+		case .critical: return "‼️ CRITICAL"
+		case .error: return "🛑 ERROR"
+		case .warn: return "⚠️ WARN"
+		case .notice: return "📝 NOTICE"
+		case .info: return "ℹ️ INFO"
+		case .debug: return "🐞 DEBUG"
+		case .trace: return "🧵 TRACE"
+//		case .enter: return "→ ENTER"
+//		case .exit: return "← EXIT"
 		}
 	}
 	public static func <(lhs: LogLevel, rhs: LogLevel) -> Bool {
