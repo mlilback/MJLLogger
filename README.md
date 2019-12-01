@@ -6,5 +6,6 @@ A logging framework for swift. There are a lot of them out there, but I didn't f
 * Allows categorization
 * Allows changing logging config while running (so you don't have to restart a server)
 
-Currently at the bare minimum to work. 
+Also works as a backend for [swift-log](https://github.com/apple/swift-log).
+
 
