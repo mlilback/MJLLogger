@@ -46,9 +46,11 @@ public final class MJLLogger {
 	public func log(_ entry: LogEntry)
 	{
 		let logNormally = configuration.loggingEnabled(level: entry.level, category: entry.category)
-		handlers.forEach {
-			guard $0.logEverything || logNormally else { return }
-			$0.append(entry: entry)
+		DispatchQueue.main.async {
+			self.handlers.forEach {
+				guard $0.logEverything || logNormally else { return }
+				$0.append(entry: entry)
+			}
 		}
 	}
 }
