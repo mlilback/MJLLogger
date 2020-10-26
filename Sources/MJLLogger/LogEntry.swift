@@ -32,7 +32,7 @@ public struct LogEntry: Codable {
 	/// the filename/path to the file with the call to create the entry
 	public let fileName: String?
 	/// the timestamp of when the entry was created
-	public let date = Date()
+	public let date
 	
 	/// initializes a new LogEntry. All values have default values
 	public init(type: EntryType = .entry, message: String = "", level: MJLLogLevel = .info, category: LogCategory = .general, function: String? = nil, line: Int? = nil, fileName: String? = nil)
@@ -44,5 +44,6 @@ public struct LogEntry: Codable {
 		self.function = function
 		self.line = line
 		self.fileName = fileName
+		self.date = Date()
 	}
 }
