@@ -89,7 +89,7 @@ public final class StdErrHandler: FileHandleLogHandler {
 open class FileHandleLogHandler: MJLLogHandler {
 	private var handle: FileHandle?
 	// had a deadlock on the main thread. makes no sense since there was no recursive call to append, which is the only place this queue is used
-	private let queue = DispatchQueue(label: "com.lilback.MJLLogger.fileHandleLogHandler", qos: .userInitiated, target: .global())
+	private let queue = DispatchQueue(label: "com.lilback.MJLLogger.fileHandleLogHandler", qos: .userInitiated, attributes: .concurrent, target: .global())
 	public let formatter: LogFormatter
 	public let config: LogConfiguration
 	public let logEverything: Bool
